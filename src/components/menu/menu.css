@@ -1,0 +1,229 @@
+/*wporking code */ 
+
+/* .menu-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f5f5f5;
+  }
+  
+ 
+  .menu-header {
+    background-color: #4052B5;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+  }
+  
+  .menu-logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .menu-logout {
+    background-color: #4052B5;
+    color: white;
+    font-size: 16px;
+    padding: 8px 12px;
+    border-radius: 5px;
+  
+  }
+  
+  .menu-logout:hover {
+    background-color: #364397;
+  }
+  
+
+  .menu-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+  }
+  
+  .menu-title {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .menu-subtitle {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 30px;
+  }
+  
+  .menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 320px;
+  }
+  
+  .menu-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #4052B5;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 14px;
+    border-radius: 25px;
+    text-align: center;
+    text-decoration: none;
+    justify-content: center;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .menu-btn:hover {
+    background-color: #364397;
+  }
+  
+  .icon {
+    width: 20px;
+    height: 20px;
+  } */
+
+
+  /* working code  before integrating voice  */
+
+  .menu-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #4052B5, #2c3a87);
+    color: white;
+  }
+  
+  .app-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    background: rgba(0, 0, 0, 0.1);
+  }
+  
+  .header-content {
+    max-width: 100%;
+    padding: 0 1rem;
+    height: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .brand-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  .brand-icon {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+  
+  .brand-name {
+    font-size: 1.25rem;
+    font-weight: 700;
+    padding-left: 0.5rem;
+  }
+  
+  .header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .notifications-icon {
+    height: 1.25rem;
+    width: 1.25rem;
+  }
+  
+  .logout-button {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    transition: background 0.2s ease;
+  }
+  
+  .logout-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .main-content {
+    padding: 3rem 0;
+  }
+  
+  .content-wrapper {
+    max-width: 56rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .main-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .menu-grid {
+    display: grid;
+    gap: 1.5rem;
+    padding: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+  
+  .menu-card-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .menu-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+  }
+  
+  .menu-card:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+  }
+  
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .icon-wrapper {
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+  }
+  
+  .menu-icon {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+  
+  .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  .card-description {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  @media (min-width: 768px) {
+    .menu-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+

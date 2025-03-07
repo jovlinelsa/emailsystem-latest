@@ -1,0 +1,137 @@
+/* body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+  
+  .inbox-container {
+    display: flex;
+    height: 100vh;
+    background-color: white;
+  }
+  
+  .sidebarinbox {
+    width: 20%;
+    background-color: #3f51b5;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+  }
+  
+  .sidebarinbox h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .send-email {
+    display: block;
+    background-color: white;
+    color: #3f51b5;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  .send-email:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .folder-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .folder {
+    margin: 10px 0;
+    cursor: pointer;
+  }
+  
+  .folder:hover {
+    text-decoration: underline;
+  }
+  
+  .add-folder {
+    background-color: white;
+    color: #3f51b5;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    font-weight: bold;
+  }
+  
+  .add-folder:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .main-content {
+    width: 80%;
+    margin-left: 20%;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
+    height: 100vh;
+  }
+  
+  .header {
+    margin-bottom: 20px;
+  }
+  
+  .search-bar {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .email-list {
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .email-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .email-item:last-child {
+    border-bottom: none;
+  }
+  
+  .email-checkbox {
+    margin-right: 10px;
+  }
+  
+  .email-info {
+    flex: 1;
+  }
+  
+  .email-sender {
+    margin: 0;
+    font-weight: bold;
+    color: #3f51b5;
+    font-size: 18px;
+  }
+  
+  .email-subject {
+    margin: 5px 0 0;
+    color: #555;
+  }
+  
+  .email-time {
+    color: #999;
+  } */
