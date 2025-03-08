@@ -1,154 +1,154 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import { Mail, Star } from "lucide-react"; // Importing icons from lucide-react
 import "./compose.css";
 
 const Compose = () => {
-  const [userPrompt, setUserPrompt] = useState("");
-  const [generatedEmail, setGeneratedEmail] = useState("");
-  const [to, setTo] = useState("");
-  const [subject, setSubject] = useState("");
-  const [loading, setLoading] = useState(false);
-        
-  const handleGenerateEmail = async () => {
-    // Simulate API call to generate email
-    setLoading(true);
-    try {
-      const response = await fetch("http://localhost:5000/generate-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: userPrompt }),
-      });
-      const data = await response.json();
-      setGeneratedEmail(data.email || "Error: Unable to generate email.");
-    } catch (error) {
-      console.error("Error generating email:", error);
-      setGeneratedEmail("Error: Unable to generate email.");
-    }
-    finally {
-      setLoading(false); // Stop loading
-    }
+  const [emailData, setEmailData] = useState({
+    description: "",
+    to: "",
+    subject: "",
+    body: "",
+  });
+
+  const [file, setFile] = useState(null);
+  const [activeFilter, setActiveFilter] = useState("compose"); // Default to "compose" view
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEmailData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  // const handleSendEmail = () => {
-  //   alert("Email Sent Successfully!");
-  // };
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
 
-  const handleSendEmail = async () => {
-    const emailData = {
-      receiverEmail: to,
-      subject: subject,
-      content: generatedEmail,
-      ccEmails: [], // Add CC functionality if needed
-    };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Email Data:", emailData);
+    console.log("Attached File:", file);
+  };
 
-    try {
-      const response = await fetch("http://localhost:5000/send-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(emailData),
-      });
-  
-      const data = await response.json();
-      if (response.ok) {
-        alert(data.message || "Email Sent Successfully!");
-      } else {
-        alert(data.error || "Failed to send email.");
-      }
-    } catch (error) {
-      console.error("Error sending email:", error);
-      alert("Error: Unable to send email.");
-    }
+  const handleDiscard = () => {
+    setEmailData({
+      description: "",
+      to: "",
+      subject: "",
+      body: "",
+    });
+    setFile(null);
   };
 
   return (
-    <div className="compose-container">
-  {/* Header Section */}
-  <header className="header">
-    <h1 className="header-title">Email Composer</h1>
-    <div className="header-actions">
-      <button className="logout-button">Logout</button>
-    </div>
-  </header>
- <div className="container">
- <div className="sidebar">
-    <button className="compose-button">Compose</button>
-    <ul className="menu">
-      <li className="menu-item active">Inbox</li>
-      <li className="menu-item">Spam</li>
-      <li className="menu-item">Sent</li>
-      <li className="menu-item">Important</li>
-      <li className="menu-item">Draft</li>
-      <li className="menu-item">Trash</li>
-    </ul>
-  </div>
-  <div className="content">
-    {/* Describe the Email Section */}
-    <div className="email-description">
-      <label htmlFor="userPrompt" className="section-label">
-        Describe the Email:
-      </label>
-      <textarea
-        id="userPrompt"
-        className="email-textarea"
-        rows="4"
-        placeholder="Enter a description of the email..."
-        value={userPrompt}
-        onChange={(e) => setUserPrompt(e.target.value)}
-      ></textarea>
-      <button className="generate-button" onClick={handleGenerateEmail}>
-        Generate Email
-      </button>
-    </div>
+    <div className="email-container">
+      {/* Navbar */}
+      <nav className="navbar">
+        <span className="logo">InVision</span>
+        <button className="logout-btn">Logout</button>
+      </nav>
 
-    {/* Display Generated Email Section */}
-    {generatedEmail && (
-      <div className="generated-content">
-        <label htmlFor="generatedEmail" className="section-label">
-          Generated Email:
-        </label>
-        <textarea
-          id="generatedEmail"
-          className="email-textarea"
-          rows="6"
-          readOnly
-          value={generatedEmail}
-        ></textarea>
+      <div className="main-content">
+        {/* Sidebar */}
+        <aside className="sidebar">
+          <button
+            className={`nav-btn ${activeFilter === "compose" ? "active" : ""}`}
+            onClick={() => setActiveFilter("compose")}
+          >
+            <Mail size={16} /> Compose
+          </button>
+          <button
+            className={`nav-btn ${activeFilter === "starred" ? "active" : ""}`}
+            onClick={() => setActiveFilter("starred")}
+          >
+            <Star size={16} /> Starred
+          </button>
+          <button
+            className={`nav-btn ${activeFilter === "important" ? "active" : ""}`}
+            onClick={() => setActiveFilter("important")}
+          >
+            <Star size={16} /> Important
+          </button>
+          <button
+            className={`nav-btn ${activeFilter === "sent" ? "active" : ""}`}
+            onClick={() => setActiveFilter("sent")}
+          >
+            <Mail size={16} /> Sent
+          </button>
+        </aside>
+
+        {/* Email Form (shown only when activeFilter is "compose") */}
+        {activeFilter === "compose" && (
+          <main className="email-form-container">
+            <h1 className="form-title">Compose Email</h1>
+            <form onSubmit={handleSubmit} className="email-form">
+              <div className="form-group">
+                <label>Description:</label>
+                <textarea
+                  name="description"
+                  value={emailData.description}
+                  onChange={handleChange}
+                  placeholder="Describe what you want to say in this email..."
+                  className="description-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>To:</label>
+                <input
+                  type="email"
+                  name="to"
+                  value={emailData.to}
+                  onChange={handleChange}
+                  placeholder="recipient@example.com"
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Subject:</label>
+                <input
+                  type="text"
+                  name="subject"
+                  value={emailData.subject}
+                  onChange={handleChange}
+                  placeholder="Email subject"
+                  className="form-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Body:</label>
+                <textarea
+                  name="body"
+                  value={emailData.body}
+                  readOnly
+                  placeholder="Email body will be generated from your description..."
+                  className="body-input"
+                />
+              </div>
+
+              <div className="form-group">
+                <label>Attachments:</label>
+                <label className="file-label">
+                  <input type="file" onChange={handleFileChange} className="file-input" />
+                  <span className="file-button">Add Attachment</span>
+                </label>
+                {file && <div className="file-name">{file.name}</div>}
+              </div>
+
+              <div className="button-group">
+                <button type="submit" className="send-btn">Send</button>
+                <button type="button" className="discard-btn" onClick={handleDiscard}>
+                  <span className="icon">🗑</span> Discard
+                </button>
+              </div>
+            </form>
+          </main>
+        )}
       </div>
-    )}
-
-    {/* Email Compose Section */}
-    <div className="email-compose">
-      <input
-        type="text"
-        placeholder="To:"
-        className="email-input"
-        value={to}
-        onChange={(e) => setTo(e.target.value)}
-      />
-      <input
-        type="text"
-        placeholder="Subject:"
-        className="email-input"
-        value={subject}
-        onChange={(e) => setSubject(e.target.value)}
-      />
-      <textarea
-        placeholder="Enter text ..."
-        className="email-textarea"
-        value={generatedEmail}
-        onChange={(e) => setGeneratedEmail(e.target.value)}
-      ></textarea>
-      <div className="attachment" >Drop files here to upload</div>
-      <div className="action-buttons">
-        <button className="send-button" onClick={handleSendEmail}>
-          Send
-        </button>
-        <button className="discard-button">Discard</button>
-      </div>
     </div>
-  </div>
- </div>
-</div>
-
   );
 };
 
