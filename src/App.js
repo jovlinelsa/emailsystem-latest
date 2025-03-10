@@ -1,5 +1,6 @@
 import React from "react";
 import Login from "./components/login/login";
+import Faceid from "./components/faceid/faceid";
 import Menu from "./components/menu/menu";
 import Inbox from "./components/inbox/inbox";
 import Spam from "./components/spam/spam";
@@ -13,6 +14,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/faceid" element={<Faceid />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/inbox" element={<Inbox />} />
         <Route path="/compose" element={<Compose />} />
