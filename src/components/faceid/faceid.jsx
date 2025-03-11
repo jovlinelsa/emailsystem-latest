@@ -96,11 +96,7 @@ export default function FaceId() {
                 </div>
               )}
 
-              <div className="face-id-indicator">
-                <div className="indicator-inner">
-                  <Scan className="indicator-icon" />
-                </div>
-              </div>
+              
 
               <div className="corner-accent top-left"></div>
               <div className="corner-accent top-right"></div>
@@ -113,3 +109,6 @@ export default function FaceId() {
     </div>
   );
 }
+
+
+
