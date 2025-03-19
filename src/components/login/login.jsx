@@ -6,28 +6,24 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Initialize useNavigate for routing
+  const navigate = useNavigate();
 
-  const hardcodedEmail = "draaft001@gmail.com";
-  const hardcodedPassword = "hxrvnhczikjuwlva";
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    navigate("/faceid", { state: { email, password } }); // Pass email/password to FaceId
+  };
 
-    // Validate credentials
-    if (email === hardcodedEmail && password === hardcodedPassword) {
-      setError("");
-      navigate("/menu"); // Redirect to the menu page
-    } else {
-      setError("Invalid Email ID or Password. Please try again.");
-    }
+  const speak = (text) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(utterance);
   };
 
   return (
-    <div className="login-container">
+    <div className="login-container" role="main">
       <div className="logo">
         <h1>
-          <span>InVision</span>
+          <span aria-label="InVision">InVision</span>
         </h1>
       </div>
       <form className="login-form" onSubmit={handleSubmit}>
@@ -38,6 +34,7 @@ const LoginPage = () => {
           value={email}
           autoComplete="on"
           onChange={(e) => setEmail(e.target.value)}
+          aria-label="Email ID"
         />
         <input
           type="password"
@@ -46,14 +43,22 @@ const LoginPage = () => {
           value={password}
           autoComplete="on"
           onChange={(e) => setPassword(e.target.value)}
+          aria-label="Password"
         />
-        <button type="submit" className="login-button">
+        <button type="submit" className="login-button" aria-label="Login">
           LOGIN
         </button>
       </form>
-      {error && <p className="error-text">{error}</p>}
+      {error && (
+        <p className="error-text" aria-live="polite">
+          {error}
+        </p>
+      )}
       <p className="register-text">
-        Don't have an account? <a href="#register">REGISTER NOW</a>
+        Don't have an account?{" "}
+        <a href="/register" aria-label="Register Now">
+          REGISTER NOW
+        </a>
       </p>
     </div>
   );

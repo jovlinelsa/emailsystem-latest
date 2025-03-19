@@ -18,7 +18,7 @@ const Register = () => {
     if (cameraActive && videoRef.current) {
       console.log("Starting camera...");
       navigator.mediaDevices
-        .getUserMedia({ video: true })
+        .getUserMedia({ video: { width: 640, height: 480 } }) // Specify resolution
         .then((stream) => {
           console.log("Camera stream obtained:", stream);
           if (videoRef.current) {
@@ -41,15 +41,25 @@ const Register = () => {
                 width: videoRef.current.videoWidth,
                 height: videoRef.current.videoHeight,
               });
+              if (videoRef.current.videoWidth === 0 || videoRef.current.videoHeight === 0) {
+                console.error("Video dimensions are zero. Stream may not be valid.");
+                setError("Video stream is not valid. Please check camera permissions or try again.");
+                speak("Video stream is not valid. Please check camera permissions or try again.");
+                stopVideo();
+                return;
+              }
               playVideo(); // Play the video once metadata is loaded
 
               // Check if the video is actually playing
-              if (videoRef.current.paused) {
-                console.warn("Video is not playing after play() call.");
-                setError("Video failed to play. Please try again.");
-                speak("Video failed to play. Please try again.");
-                return;
-              }
+              setTimeout(() => {
+                if (videoRef.current.paused) {
+                  console.warn("Video is not playing after play() call.");
+                  setError("Video failed to play. Please try again.");
+                  speak("Video failed to play. Please try again.");
+                  stopVideo();
+                  return;
+                }
+              }, 1000); // Check after 1 second
 
               speak("Please face the camera to register your face");
               setTimeout(async () => {
@@ -87,7 +97,7 @@ const Register = () => {
                   speak("Registration failed. Please try again.");
                   console.error("Registration request failed:", err);
                 }
-              }, 5000); // Timeout for capturing image
+              }, 7000); // Increased timeout to 7 seconds
             };
 
             videoRef.current.oncanplay = () => {
@@ -142,9 +152,10 @@ const Register = () => {
     const canvas = canvasRef.current;
     canvas.width = videoRef.current.videoWidth;
     canvas.height = videoRef.current.videoHeight;
-    canvas.getContext("2d").drawImage(videoRef.current, 0, 0);
+    const context = canvas.getContext("2d");
+    context.drawImage(videoRef.current, 0, 0);
     const imageData = canvas.toDataURL("image/jpeg");
-    console.log("Image captured successfully:", imageData);
+    console.log("Image captured successfully:", imageData.substring(0, 50) + "..."); // Log first 50 chars
     return imageData;
   };
 
@@ -234,8 +245,9 @@ const Register = () => {
                   className="video"
                   autoPlay
                   playsInline
-                  muted // Add muted to ensure autoplay works in some browsers
+                  muted // Ensure autoplay works
                   aria-hidden="true"
+                  style={{ width: "100%", height: "100%" }} // Inline style as fallback
                 />
               ) : (
                 <div className="video-placeholder">

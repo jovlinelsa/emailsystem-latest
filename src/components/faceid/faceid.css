@@ -140,19 +140,35 @@
   
   .video-wrapper {
     position: relative;
-    aspect-ratio: 1 / 1;
     width: 100%;
-    max-width: 24rem; /* Increased height and width */
-    margin: 0 auto;
+    padding-top: 75%; /* 4:3 aspect ratio */
+    overflow: hidden;
   }
   
   .video {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 18px;
+    border-radius: 8px;
+    background-color: #000; /* Fallback background if video fails */
   }
   
+  /* Ensure the scanning overlay is visible but doesn’t block the video */
+  .scanning-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none; /* Allow video to be visible underneath */
+  }
   .content-wrapper {
     position: relative;
     z-index: 10;
@@ -188,17 +204,6 @@
     color: rgba(63, 81, 181, 0.3);
   }
   
-  .scanning-overlay {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
   
   .scanning-line {
     position: absolute;
@@ -326,3 +331,23 @@
     border-right-width: 2px;
     border-bottom-right-radius: 0.5rem;
   }
+ 
+  /* Styles for the register link */
+.register-link {
+  font-size: 0.875rem;
+  color: #666666;
+  margin-top: 1rem;
+  
+}
+
+.register-link-text {
+  color: #3f51b5;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.register-link-text:hover {
+  color: #303f9f;
+  text-decoration: underline;
+}
