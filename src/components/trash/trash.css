@@ -1,0 +1,246 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+      "Helvetica Neue", sans-serif;
+    color: #1a1a1a;
+    background-color: #f8f9fa;
+    line-height: 1.5;
+  }
+  
+  /* Navbar */
+  .trash-navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: #3f51b5;
+    color: white;
+    height: 60px;
+  }
+  
+  .trash-logo {
+    font-size: 1.25rem;
+    font-weight: bold;
+    padding-left: 20px;
+  }
+  
+  .trash-logout-btn {
+    background-color: #ffffff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    color: #3f51b5;
+    font-weight: 500;
+  }
+  
+  .trash-logout-btn:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .trash-navbar button {
+    margin-right: 20px;
+  }
+  
+  /* Main content */
+  .trash-app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .trash-main-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    padding: 0;
+  }
+  
+  /* Sidebar */
+  .trash-sidebar {
+    width: 250px;
+    background-color: white;
+    border-right: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+  }
+  
+  .trash-nav-btn {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+    color: #3f51b5;
+    border-left: 4px solid transparent;
+    width: 100%;
+    text-align: left;
+  }
+  
+  .trash-nav-btn svg {
+    margin-right: 0.5rem;
+  }
+  
+  .trash-nav-btn:hover {
+    background-color: #f1f5f9;
+  }
+  
+  .trash-nav-btn.active {
+    background-color: #ede9fe;
+    border-left-color: #3f51b5;
+    font-weight: bold;
+  }
+  
+  /* Email List */
+  .trash-email-list {
+    width: 33.333%;
+    background-color: white;
+    border-right: 1px solid #e2e8f0;
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+    padding: 1rem 0;
+  }
+  
+  .trash-email-list ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .trash-email-item {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e2e8f0;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .trash-email-item:hover,
+  .trash-email-item.selected {
+    background-color: #f1f5f9;
+  }
+  
+  .trash-email-item.unread {
+    font-weight: 600;
+    background-color: #fff;
+  }
+  
+  .trash-email-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.875rem;
+    height: 32px;
+  }
+  
+  .trash-email-recipient-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .trash-email-initial {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    background-color: #3f51b5;
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 0.875rem;
+  }
+  
+  .trash-email-recipient {
+    font-weight: 500;
+    color: #1a1a1a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+  }
+  
+  .trash-email-date {
+    color: #64748b;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    text-align: right;
+  }
+  
+  .trash-email-subject {
+    color: #0f172a;
+    font-weight: 600;
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  .trash-email-preview {
+    font-size: 0.875rem;
+    color: #64748b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Email Content */
+  .trash-email-content {
+    flex: 1;
+    padding: 2rem;
+    background-color: white;
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+  }
+  
+  .trash-email-detail {
+    width: 100%;
+  }
+  
+  .trash-email-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+  }
+  
+  .trash-email-detail-subject {
+    font-size: 1.5rem;
+    margin: 0;
+    color: #1a1a1a;
+    font-weight: 600;
+  }
+  
+  .trash-email-detail-date {
+    color: #64748b;
+    font-size: 0.875rem;
+  }
+  
+  .trash-email-detail-content p {
+    margin-bottom: 1rem;
+    color: #1a1a1a;
+    line-height: 1.6;
+  }
+  
+  .trash-email-content strong {
+    color: #64748b;
+  }
+  
+  .trash-empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #64748b;
+  }

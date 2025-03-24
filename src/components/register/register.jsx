@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { User } from "lucide-react";
 import "./register.css";
@@ -14,123 +14,24 @@ const Register = () => {
   const canvasRef = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (cameraActive && videoRef.current) {
+  const startCamera = async () => {
+    try {
       console.log("Starting camera...");
-      navigator.mediaDevices
-        .getUserMedia({ video: { width: 640, height: 480 } }) // Specify resolution
-        .then((stream) => {
-          console.log("Camera stream obtained:", stream);
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-
-            // Wait for the video to be ready before playing
-            const playVideo = () => {
-              console.log("Attempting to play video...");
-              videoRef.current.play().then(() => {
-                console.log("Video is playing successfully.");
-              }).catch((err) => {
-                console.error("Error playing video:", err);
-                setError("Error playing video: " + err.message);
-                speak("Error playing video. Please try again.");
-              });
-            };
-
-            videoRef.current.onloadedmetadata = () => {
-              console.log("Video metadata loaded. Video dimensions:", {
-                width: videoRef.current.videoWidth,
-                height: videoRef.current.videoHeight,
-              });
-              if (videoRef.current.videoWidth === 0 || videoRef.current.videoHeight === 0) {
-                console.error("Video dimensions are zero. Stream may not be valid.");
-                setError("Video stream is not valid. Please check camera permissions or try again.");
-                speak("Video stream is not valid. Please check camera permissions or try again.");
-                stopVideo();
-                return;
-              }
-              playVideo(); // Play the video once metadata is loaded
-
-              // Check if the video is actually playing
-              setTimeout(() => {
-                if (videoRef.current.paused) {
-                  console.warn("Video is not playing after play() call.");
-                  setError("Video failed to play. Please try again.");
-                  speak("Video failed to play. Please try again.");
-                  stopVideo();
-                  return;
-                }
-              }, 1000); // Check after 1 second
-
-              speak("Please face the camera to register your face");
-              setTimeout(async () => {
-                console.log("Capturing image...");
-                const imageData = captureImage();
-                if (!imageData) {
-                  setError("Failed to capture image.");
-                  speak("Failed to capture image.");
-                  console.error("Image capture failed.");
-                  stopVideo();
-                  return;
-                }
-                stopVideo();
-
-                const formData = new FormData();
-                formData.append("email", email);
-                formData.append("password", password);
-                formData.append("image", dataURLtoBlob(imageData));
-
-                try {
-                  console.log("Sending register request to backend...");
-                  const response = await fetch("http://localhost:5000/register", {
-                    method: "POST",
-                    body: formData,
-                  });
-                  const result = await response.json();
-                  console.log("Backend response:", result);
-                  setError(result.message);
-                  speak(result.message);
-                  if (result.status === "success") {
-                    navigate("/");
-                  }
-                } catch (err) {
-                  setError("Registration failed: " + err.message);
-                  speak("Registration failed. Please try again.");
-                  console.error("Registration request failed:", err);
-                }
-              }, 7000); // Increased timeout to 7 seconds
-            };
-
-            videoRef.current.oncanplay = () => {
-              console.log("Video can play. Ensuring playback...");
-              playVideo();
-            };
-
-            videoRef.current.onerror = (e) => {
-              console.error("Video element error:", e);
-              setError("Error with video playback: " + e.message);
-              speak("Error with video playback. Please try again.");
-            };
-          }
-        })
-        .catch((err) => {
-          setError("Error accessing camera: " + err.message);
-          speak("Error accessing camera. Please try again.");
-          console.error(err);
-          setCameraActive(false);
-        });
-    }
-  }, [cameraActive, email, password, navigate]);
-
-  // Debug videoRef after render
-  useEffect(() => {
-    console.log("Video ref after render:", videoRef.current);
-    if (videoRef.current) {
-      console.log("Video element dimensions (computed):", {
-        width: videoRef.current.offsetWidth,
-        height: videoRef.current.offsetHeight,
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { width: 640, height: 480 },
       });
+
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+        console.log("Camera started successfully.");
+      }
+    } catch (err) {
+      console.error("Error accessing camera:", err);
+      setError("Camera access denied. Please allow camera permissions.");
+      setCameraActive(false);
     }
-  }, [cameraActive]);
+  };
 
   const stopVideo = () => {
     if (videoRef.current && videoRef.current.srcObject) {
@@ -141,11 +42,8 @@ const Register = () => {
   };
 
   const captureImage = () => {
-    if (!videoRef.current || !videoRef.current.videoWidth || !videoRef.current.videoHeight) {
-      console.error("Video element is not ready or not found. Dimensions:", {
-        width: videoRef.current?.videoWidth,
-        height: videoRef.current?.videoHeight,
-      });
+    if (!videoRef.current) {
+      setError("Video element is not ready.");
       return null;
     }
 
@@ -154,41 +52,72 @@ const Register = () => {
     canvas.height = videoRef.current.videoHeight;
     const context = canvas.getContext("2d");
     context.drawImage(videoRef.current, 0, 0);
-    const imageData = canvas.toDataURL("image/jpeg");
-    console.log("Image captured successfully:", imageData.substring(0, 50) + "..."); // Log first 50 chars
-    return imageData;
-  };
 
-  const speak = (text) => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    window.speechSynthesis.speak(utterance);
-  };
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    if (!email || !password) {
-      setError("Please enter both email and password.");
-      speak("Please enter both email and password.");
-      return;
-    }
-
-    setError("Capturing face...");
-    setCameraActive(true);
+    return canvas.toDataURL("image/jpeg");
   };
 
   const dataURLtoBlob = (dataurl) => {
-    const arr = dataurl.split(",");
-    const mime = arr[0].match(/:(.*?);/)[1];
-    const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    while (n--) u8arr[n] = bstr.charCodeAt(n);
-    return new Blob([u8arr], { type: mime });
+    const [meta, base64] = dataurl.split(",");
+    const mime = meta.match(/:(.*?);/)[1];
+    const binary = atob(base64);
+    const array = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) array[i] = binary.charCodeAt(i);
+    return new Blob([array], { type: mime });
   };
 
-  useEffect(() => {
-    return () => stopVideo();
-  }, []);
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    
+    if (!email || !password) {
+      setError("Please enter both email and password.");
+      return;
+    }
+
+    setError(""); // Clear any previous error
+    setCameraActive(true);
+
+    try {
+      await startCamera();
+      setTimeout(async () => {
+        console.log("Capturing image...");
+        const imageData = captureImage();
+        
+        if (!imageData) {
+          setError("Failed to capture image.");
+          stopVideo();
+          return;
+        }
+
+        stopVideo();
+
+        const formData = new FormData();
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("image", dataURLtoBlob(imageData));
+
+        console.log("Sending register request to backend...");
+        const response = await fetch("http://localhost:5000/register", {
+          method: "POST",
+          body: formData,
+          credentials: "include",
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        const result = await response.json();
+        console.log("Backend response:", result);
+        if (result.status === "success") {
+          navigate("/");
+        } else {
+          setError(result.message);
+        }
+      }, 2000); // Reduced delay for better user experience
+    } catch (err) {
+      setError("Registration failed: " + err.message);
+      console.error("Registration request failed:", err);
+      stopVideo();
+    }
+  };
 
   return (
     <div className="welcome-container" role="main">
@@ -197,11 +126,9 @@ const Register = () => {
 
       <div className="content-wrapper">
         <div className="text-section">
-          <h1 className="welcome-title" aria-label="Welcome to InVision">
-            Welcome to InVision
-          </h1>
-          <p className="welcome-text" aria-label="Please add your email ID and password then registering of face">
-            Please add your email ID and password then registering of face
+          <h1 className="welcome-title">Welcome to InVision</h1>
+          <p className="welcome-text">
+            Please add your email ID and password before registering your face.
           </p>
           <form className="register-form" onSubmit={handleRegister}>
             <input
@@ -210,7 +137,6 @@ const Register = () => {
               className="input-field"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              aria-label="Email ID"
             />
             <input
               type="password"
@@ -218,46 +144,24 @@ const Register = () => {
               className="input-field"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              aria-label="Password"
             />
-            <button
-              type="submit"
-              className="verify-button"
-              aria-label="Register"
-              disabled={cameraActive}
-            >
+            <button type="submit" className="verify-button" disabled={cameraActive}>
               {cameraActive ? "Registering..." : "Register"}
             </button>
           </form>
-          {error && (
-            <p className="error-text" aria-live="polite">
-              {error}
-            </p>
-          )}
+          {error && <p className="error-text">{error}</p>}
         </div>
 
         <div className="card-section">
           <div className="card">
             <div className="video-wrapper">
               {cameraActive ? (
-                <video
-                  ref={videoRef}
-                  className="video"
-                  autoPlay
-                  playsInline
-                  muted // Ensure autoplay works
-                  aria-hidden="true"
-                  style={{ width: "100%", height: "100%" }} // Inline style as fallback
-                />
+                <video ref={videoRef} className="video" autoPlay playsInline muted />
               ) : (
                 <div className="video-placeholder">
                   <User className="user-icon" />
                 </div>
               )}
-              <div className="corner-accent top-left"></div>
-              <div className="corner-accent top-right"></div>
-              <div className="corner-accent bottom-left"></div>
-              <div className="corner-accent bottom-right"></div>
             </div>
           </div>
         </div>
